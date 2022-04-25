@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
+import InstagramProvider from 'next-auth/providers/instagram';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,7 @@ const handler = (req, res) => NextAuth(req, res, {
         password: {  label: "Password", type: "password" }
       },
       async authorize({ email, password }, req) {
+        console.log(email, password);
         // this is where we would actually look up a user in the db
         if (email === "grey@grey.com" && password === "password") {
           const user = {
@@ -27,6 +29,10 @@ const handler = (req, res) => NextAuth(req, res, {
           return null
         }
       }
+    }),
+    InstagramProvider({
+      clientId: process.env.INSTAGRAM_CLIENT_ID,
+      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
